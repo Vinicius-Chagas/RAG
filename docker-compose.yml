@@ -1,5 +1,22 @@
 services:
 
+  api:
+    build: ./app/api
+    container_name: RAG
+    ports:
+      - "3333:3333"
+    command: fastapi dev ./app/api/main.py
+    depends_on:
+      minio: 
+        condition: service_healthy
+    healthcheck:
+      test: ["curl", "localhost:8000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -9,5 +26,15 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["curl", "localhost:9001"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
     volumes:
       - minio_data:/data
+
+  volumes:
+    minio_data:
+    

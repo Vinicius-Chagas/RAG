@@ -1,0 +1,27 @@
+from api.bucket.bucket_client import client
+from typing import BinaryIO
+from fastapi import UploadFile
+import time
+
+class BucketService: 
+
+    def list_objects(self,bucket:str, prefix:str | None):
+        return client.list_objects(bucket_name=bucket, prefix=prefix)
+    
+    def list_buckets(self):
+        return client.list_buckets()
+    
+    def append_object(self, bucket:str, file:UploadFile):
+        print(file.filename)
+        obj_name = self.__gen_name(file_name=file.filename)
+        client.append_object(bucket_name=bucket, object_name=obj_name, data=file.file, length=file.size)
+
+    def remove_object(self, bucket:str, obj_name:str):
+        client.remove_object(bucket_name=bucket, object_name=obj_name)
+      
+    def update_object(self, bucket:str, obj_name:str, data:BinaryIO, length:int):
+        client.put_object(bucket_name=bucket, object_name=obj_name, data=data, length=length)
+
+    def __gen_name(self, file_name:str):
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        return file_name + timestr

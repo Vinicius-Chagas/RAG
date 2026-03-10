@@ -1,8 +1,8 @@
-from client import client
+from api.bucket.bucket_client import client
 
 class BucketStructure:        
 
-    def build():
+    def build(self):
         needed_buckets = ("bronze", "silver", "gold")
         for b in needed_buckets:
             if not client.bucket_exists(b):
