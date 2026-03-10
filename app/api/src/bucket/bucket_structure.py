@@ -1,4 +1,4 @@
-from api.bucket.bucket_client import client
+from src.bucket.bucket_client import client
 
 class BucketStructure:        
 

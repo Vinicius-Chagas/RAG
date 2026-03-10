@@ -1,8 +1,12 @@
 from fastapi import FastAPI, UploadFile
-from api.bucket.bucket_service import BucketService
+from src.bucket.bucket_service import BucketService
+from src.bucket.bucket_structure import BucketStructure
 
 app = FastAPI()
 bucketService = BucketService()
+bucketStructure = BucketStructure()
+
+bucketStructure.build()
 
 @app.get("/health")
 def health():
@@ -10,8 +14,8 @@ def health():
 
 @app.post("/upload-file")
 async def upload_file(file: UploadFile):
-    bucketService.append_object("bronze", file)
-    return { "status": "file created with success" }
+    file_name = bucketService.append_object("bronze", file)
+    return { "status": "file created with success", "file_name" : file_name }
 
 @app.delete("/remove-file")
 async def remove_file(file_name: str):
