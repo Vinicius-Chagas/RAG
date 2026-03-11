@@ -1,7 +1,7 @@
 minio
 fastapi[standard]
 pandas
-pymilvus==2.6.11
+pymilvus==2.6.9
 sentence-transformers
-pypdf2
+pypdf
 langchain-text-splitters

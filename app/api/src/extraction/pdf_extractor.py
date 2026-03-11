@@ -1,6 +1,14 @@
-from src.extraction.abstract_extractor import Abstract_Extractor
-from PyPDF2 import PdfReader
+from src.extraction.extractor import Extractor
+from pypdf import PdfReader
+from typing import BinaryIO
 
-# batch process or live process each file?
-class Pdf_extractor(Abstract_Extractor):
-    pass
+class PDFExtractor(Extractor):
+
+    def extract(self, file: BinaryIO) -> list[str]:
+        reader = PdfReader(file)
+        text = list(str)
+
+        for page in reader.pages:
+            text.append(page.extract_text(0))
+
+        return text
