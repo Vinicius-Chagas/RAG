@@ -8,7 +8,15 @@ class BucketService:
 
     def list_objects(self,bucket:str, prefix:str | None):
         return client.list_objects(bucket_name=bucket, prefix=prefix)
-    
+        
+    def get_object(self, file_name:str):
+        try:
+            response = client.get_object("bronze", file_name)
+            return response
+        finally:
+            response.close()
+            response.release_conn()
+        
     def list_buckets(self):
         return client.list_buckets()
     
