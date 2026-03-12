@@ -4,7 +4,7 @@ from src.consts.collection import collection_name
 schema = milvusClient.create_schema()
 
 class MilvulsSchema():
-    id: str
+    id: str | None
     text_vector: list[float]
     text: str
 
@@ -18,7 +18,7 @@ schema.add_field(
 schema.add_field(
     field_name="text_vector",
     datatype=DataType.FLOAT_VECTOR,
-    dim=5
+    dim=384
 )
 
 schema.add_field(
