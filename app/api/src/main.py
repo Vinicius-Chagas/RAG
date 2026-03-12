@@ -14,7 +14,7 @@ def health():
 
 @app.post("/upload-file")
 async def upload_file(file: UploadFile):
-    file_name = bucketService.append_object("bronze", file)
+    file_name = bucketService.add_object("bronze", file)
     return { "status": "file created with success", "file_name" : file_name }
 
 @app.delete("/remove-file")

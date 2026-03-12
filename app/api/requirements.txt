@@ -1,7 +1,6 @@
 minio
 fastapi[standard]
-pandas
 pymilvus==2.6.9
-sentence-transformers
+# sentence-transformers
 pypdf
-langchain-text-splitters
+# langchain-text-splitters

@@ -1,4 +1,4 @@
-from src.extraction.extractor import Extractor
+from src.extractor.extractor import Extractor
 from pypdf import PdfReader
 from typing import BinaryIO
 
