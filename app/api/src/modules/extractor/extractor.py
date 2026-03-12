@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.bucket.bucket_service import BucketService
+from src.modules.bucket.bucket_service import BucketService
 from typing import BinaryIO
 from src.dto.file import File
 import io

@@ -1,0 +1,1 @@
+collection_name = "text_embbeding"

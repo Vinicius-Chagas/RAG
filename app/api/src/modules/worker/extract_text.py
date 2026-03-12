@@ -1,5 +1,5 @@
-from src.bucket.bucket_service import BucketService
-from src.extractor.extractor_factory import ExtractorFactory
+from src.modules.bucket.bucket_service import BucketService
+from src.modules.extractor.extractor_factory import ExtractorFactory
 from minio.datatypes import Object
 from typing import Iterator, cast
 import os

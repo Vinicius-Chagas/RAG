@@ -1,6 +1,6 @@
-from src.extractor.extractor_creator import ExtractorCreator
-from src.extractor.extractor import Extractor
-from src.extractor.pdf_extractor import PDFExtractor
+from src.modules.extractor.extractor_creator import ExtractorCreator
+from src.modules.extractor.extractor import Extractor
+from src.modules.extractor.pdf_extractor import PDFExtractor
 from src.enums.extractor_type import ExtractorType
 
 class ExtractorFactory(ExtractorCreator):
