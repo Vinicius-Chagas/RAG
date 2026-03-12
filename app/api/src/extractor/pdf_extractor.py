@@ -6,8 +6,7 @@ class PDFExtractor(Extractor):
 
     def extract(self, file: BinaryIO) -> list[str]:
         reader = PdfReader(file)
-        text = list(str)
-
+        text: list[str] = []
         for page in reader.pages:
             text.append(page.extract_text(0))
 

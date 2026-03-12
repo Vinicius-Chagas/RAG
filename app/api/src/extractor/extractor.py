@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from src.bucket.bucket_service import BucketService
 from typing import BinaryIO
 import io
+import os
 
 class Extractor(ABC):
 
@@ -12,8 +13,7 @@ class Extractor(ABC):
         pass
 
     def save_as_txt(self, text: list[str], name: str):  
-        file = io.StringIO()
-        file.writelines(text)
-        file.filename = name
+        print(len(text))
+        buffer = io.BytesIO("/n".join(text).encode("utf-8"))        
 
-        self.service.add_object("silver", file.buffer)   
+        self.bucketService.add_object("silver", buffer, os.path.splitext(name)[0] + ".txt")   
