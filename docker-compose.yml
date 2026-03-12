@@ -79,5 +79,24 @@ services:
       - "etcd"
       - "minio"
 
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    ports:
+      - 11435:11434
+    environment:
+      ollama: /root/.ollama
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/ollama:/root/.ollama
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["ollama serve & sleep 10 && ollama pull qwen3.5:4b && wait"]
+    networks:
+      - rag-network
+    restart: no
+    
 volumes:
   minio-data:
+
+networks:
+  rag-network:
+    driver: bridge

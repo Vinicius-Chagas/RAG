@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile
-from src.bucket.bucket_service import BucketService
-from src.bucket.bucket_structure import BucketStructure
+from src.modules.bucket.bucket_service import BucketService
+from src.modules.bucket.bucket_structure import BucketStructure
 from src.dto.file import File
 from io import BytesIO
 

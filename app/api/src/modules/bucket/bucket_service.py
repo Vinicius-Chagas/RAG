@@ -1,4 +1,4 @@
-from src.bucket.bucket_client import client
+from src.modules.bucket.bucket_client import client
 from typing import BinaryIO
 from minio.datatypes import Object
 from typing import Iterator
