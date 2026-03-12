@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from src.bucket.bucket_service import BucketService
 from typing import BinaryIO
+from src.dto.file import File
 import io
 import os
 
@@ -13,7 +14,9 @@ class Extractor(ABC):
         pass
 
     def save_as_txt(self, text: list[str], name: str):  
-        print(len(text))
-        buffer = io.BytesIO("/n".join(text).encode("utf-8"))        
+        file = File( io.BytesIO("/n".join(text).encode("utf-8")), self.__build_txt_name(name), "text")
+        self.bucketService.add_object("silver", file)   
 
-        self.bucketService.add_object("silver", buffer, os.path.splitext(name)[0] + ".txt")   
+    def __build_txt_name(self, name:str):
+        name, extension = os.path.splitext(name)
+        return name + ".txt"

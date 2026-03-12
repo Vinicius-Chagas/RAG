@@ -1,8 +1,8 @@
 from src.bucket.bucket_client import client
 from typing import BinaryIO
-from fastapi import UploadFile
 from minio.datatypes import Object
 from typing import Iterator
+from src.dto.file import File
 import time
 import os 
 from io import BytesIO
@@ -23,9 +23,9 @@ class BucketService:
     def list_buckets(self):
         return client.list_buckets()
     
-    def add_object(self, bucket:str, file:BytesIO, filename:str):
-        obj_name = self.__gen_name(file_name=filename or file.filename)
-        client.put_object(bucket_name=bucket, object_name=obj_name, data=file, length=file.getbuffer().nbytes, content_type="pdf")
+    def add_object(self, bucket:str, file: File):
+        obj_name = self.__gen_name(file_name=file.filename)
+        client.put_object(bucket_name=bucket, object_name=obj_name, data=file.data, length=file.size, content_type=file.content_type)
         return obj_name
 
     def remove_object(self, bucket:str, obj_name:str):

@@ -1,6 +1,8 @@
 from fastapi import FastAPI, UploadFile
 from src.bucket.bucket_service import BucketService
 from src.bucket.bucket_structure import BucketStructure
+from src.dto.file import File
+from io import BytesIO
 
 app = FastAPI()
 bucketService = BucketService()
@@ -14,7 +16,9 @@ def health():
 
 @app.post("/upload-file")
 async def upload_file(file: UploadFile):
-    file_name = bucketService.add_object("bronze", file)
+    file_obj = File(BytesIO(file.file.read()),file.filename, file.content_type)
+    file.file.close()
+    file_name = bucketService.add_object("bronze", file_obj)
     return { "status": "file created with success", "file_name" : file_name }
 
 @app.delete("/remove-file")
