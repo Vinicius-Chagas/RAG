@@ -1,6 +1,6 @@
 from ollama import Client
 
-client = Client(host='http://localhost:11434')
+client = Client(host='http://localhost:11435')
 
 def get_weather(city: str) -> str:
     """Get the current weather for a city.
@@ -29,7 +29,8 @@ for tool_call in response.message.tool_calls or []:
         
         # Send result back to model
         messages.append(response.message)
+        print(response.message)
         messages.append({'role': 'tool', 'content': result})
         
-        final = client.chat(model='qwen3:4b', messages=messages)
+        final = client.chat(model='qwen3.5:4b', messages=messages)
         print(final.message.content)

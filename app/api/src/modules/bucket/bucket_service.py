@@ -12,13 +12,15 @@ class BucketService:
     def list_objects(self,bucket:str, prefix:str | None) -> Iterator[Object]:
         return client.list_objects(bucket_name=bucket, prefix=prefix)
         
-    def get_object(self, file_name:str):
+    def get_object(self, file_name:str, bucket:str = "bronze"):
+        response = None
         try:
-            response = client.get_object("bronze", file_name)
+            response = client.get_object(bucket, file_name)
             return BytesIO(response.read())
         finally:
-            response.close()
-            response.release_conn()
+            if response is not None:
+                response.close()
+                response.release_conn()
         
     def list_buckets(self):
         return client.list_buckets()

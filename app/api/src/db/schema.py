@@ -1,6 +1,7 @@
 from pymilvus import DataType
 from src.db.client import milvusClient
 from src.consts.collection import collection_name
+
 schema = milvusClient.create_schema()
 
 class MilvulsSchema():
@@ -12,7 +13,8 @@ schema.add_field(
     field_name="id",
     datatype=DataType.VARCHAR,
     is_primary=True,
-    auto_id=True
+    auto_id=True,
+    max_length=256
 )
 
 schema.add_field(
@@ -24,7 +26,7 @@ schema.add_field(
 schema.add_field(
     field_name="text",
     datatype=DataType.VARCHAR,
-    max_length=256
+    max_length=1024
 )
 
 index_params = milvusClient.prepare_index_params()
