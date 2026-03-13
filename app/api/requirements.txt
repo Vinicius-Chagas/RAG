@@ -4,4 +4,5 @@ pymilvus==2.6.9
 sentence-transformers
 pypdf
 langchain-text-splitters
-ollama
+langchain_ollama
+langgraph

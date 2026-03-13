@@ -13,12 +13,13 @@ def get_weather(city: str) -> str:
 
 available_tools = {'get_weather': get_weather}
 
-messages = [{'role': 'user', 'content': 'What is the weather in Tokyo?'}]
+messages = [{'role': 'user', 'content': 'What is the weather in Tokyo? And whats the capital of france?'}]
 
 response = client.chat(
     model='qwen3.5:4b',
     messages=messages,
     tools=[get_weather],  # pass the function directly
+    think=False
 )
 
 # Handle tool calls
