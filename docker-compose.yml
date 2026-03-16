@@ -1,7 +1,7 @@
 services:
 
   api:
-    build: ./app/api
+    build: ./app
     container_name: RAG
     ports:
       - "3333:3333"
@@ -100,6 +100,7 @@ services:
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/ollama:/root/.ollama
       - ./ollama-setup.sh:/ollama-setup.sh:ro
+      - ./ollama-setup-9b.sh:/ollama-setup-9b.sh:ro
     entrypoint: ["/bin/sh", "-c"]
     command: ["bash /ollama-setup.sh"]
     networks:

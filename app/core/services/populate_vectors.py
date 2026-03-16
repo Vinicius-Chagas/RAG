@@ -1,10 +1,10 @@
 from app.core.services.bucket_service import BucketService
 from app.core.services.chunking_service import ChunkingService
 from app.core.services.embbeding_service import EmbbedingService
-from app.src.db.milvus_client import milvusClient
+from app.infrastructure.clients.milvus_client import milvusClient
 from app.infrastructure.repositories.base_repo import BaseRepo
 from app.infrastructure.db.vector_schema import MilvulsSchema
-from app.core.entities.collection import collection_name
+from app.infrastructure.configs import settings
 
 from minio.datatypes import Object
 from typing import Iterator, cast
@@ -32,7 +32,7 @@ class PopulateVectors():
 
                 items = self.__to_schema(chunks, embbeds)
 
-                self.repo.insert(collection_name, items)
+                self.repo.insert(settings.collection_name, items)
 
 
         def __to_schema(self, chunks: list[str], embbeds: np.ndarray[np._AnyShapeT, np.dtype[any]]) -> list[MilvulsSchema]:

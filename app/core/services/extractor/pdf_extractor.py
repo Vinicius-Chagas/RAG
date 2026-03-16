@@ -1,10 +1,10 @@
-from app.core.interfaces.extractor import Extractor
-from pypdf import PdfReader
 from typing import BinaryIO
+from pypdf import PdfReader
+from app.core.services.extractor.base import ExtractorStrategy
 
-class PDFExtractor(Extractor):
+class PDFExtractorStrategy(ExtractorStrategy):
 
-    def extract(self, file: BinaryIO) -> list[str]:
+    def process(self, file: BinaryIO) -> list[str]:
         reader = PdfReader(file)
         text: list[str] = []
         for page in reader.pages:
