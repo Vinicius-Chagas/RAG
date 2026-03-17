@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import BinaryIO
 
-class ExtractorStrategy(ABC):
+class IExtractor(ABC):
     
     @abstractmethod
     def process(self, file: BinaryIO) -> list[str]:

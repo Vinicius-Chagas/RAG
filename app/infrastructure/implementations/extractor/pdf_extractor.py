@@ -1,8 +1,8 @@
 from typing import BinaryIO
 from pypdf import PdfReader
-from app.core.interfaces.extractor import ExtractorStrategy
+from app.core.interfaces.extractor import IExtractor
 
-class PDFExtractorStrategy(ExtractorStrategy):
+class PDFExtractor(IExtractor):
 
     def process(self, file: BinaryIO) -> list[str]:
         reader = PdfReader(file)

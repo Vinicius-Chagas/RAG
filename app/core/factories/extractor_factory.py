@@ -1,12 +1,11 @@
+from app.infrastructure.implementations.extractor.pdf_extractor import PDFExtractor
+from app.core.interfaces.factory import IFactory
+class ExtractorFactory(IFactory):
+    _registry = {"pdf": PDFExtractor}
 
-class ExtractorFactory():
-
-    @classmethod
-    def register(cls, name: str, subclass):
-        cls._registry[name] = subclass
-
-    def create(self, name: str):
-        subclass = self._registry.get(name)
-        if not subclass:
-            raise ValueError(f"Unknown component: {name}")
-        return subclass()
+    def create(self, type: str):
+        extractor = self._registry.get(type.lower())
+        if not extractor:
+            print(f"Unknown component: {type.lower()}")
+            return None
+        return extractor()
