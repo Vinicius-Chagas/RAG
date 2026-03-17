@@ -1,12 +1,17 @@
 from sentence_transformers import SentenceTransformer
 import json
 
-class EmbbedingService():
+class MiniLML12_Embbeding():
 
-    model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2', device="cpu")
+    def __init__(self):
+        self._model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2', device="cpu")
 
+    @property
+    def transformer(self):
+        return self._model
+    
     def embbed_it(self, chunks: list[str]):
-        return self.model.encode(sentences=chunks)
+        return self.transformer.encode(sentences=chunks)
     
     def embbed_it_for_model(self, chunks: list[str]):
         """
@@ -18,5 +23,5 @@ class EmbbedingService():
         Returns:
             JSON string containing the embedding vectors
         """
-        vectors = self.model.encode(sentences=chunks)
+        vectors = self.transformer.encode(sentences=chunks)
         return json.dumps(vectors.tolist())  # must return a string

@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     MILVUS_URL:str = getenv("MILVUS_URL","http://localhost:19530")
     collection_name: str = "text_embbeding"
     chunk_size:int = getenv("CHUNK_SIZE", 500)
+    chunk_overlap:int = getenv("CHUNK_OVERLAP", 20)
     think: bool = getenv("ENABLE_THINK", True)
     
 settings = Settings()

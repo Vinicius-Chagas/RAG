@@ -1,21 +1,17 @@
 from pymilvus import MilvusClient
-from app.infrastructure.db.vector_schema import MilvulsSchema
-from typing import TypedDict
+from app.core.entities.documents import MilvusSchema
+from app.core.interfaces.vector_repository import VectorRepository, SearchItem
 
-class Entity(TypedDict):
-    text: str
-
-class SearchItem():
-    id: str
-    distance: float
-    entity: Entity
-class BaseRepo():
-    client: MilvusClient
+class MilvusRepo(VectorRepository):
     
     def __init__(self, client: MilvusClient):
-        self.client = client
+        self._client = client
 
-    def insert(self, collection: str, data: list[MilvulsSchema]):
+    @property
+    def client(self):
+        return self._client
+
+    def insert(self, collection: str, data: list[MilvusSchema]):
         self.client.insert(
             collection_name=collection,
             data=data
@@ -36,17 +32,6 @@ class BaseRepo():
             corresponds to one query vector (useful when passing multiple
             vectors at once) and contains the top-k results, ordered by
             increasing distance (smaller is more similar).
-
-        Notes:
-            - We hardcode `anns_field` to "text_vector" because that is the
-              field name used during indexing in this project.
-            - `limit` is currently set to 3 but can be made configurable if
-              higher recall is needed.
-            - `search_params` sets the metric type to inner product (IP); other
-              metrics such as L2 are available depending on model and indexing.
-            - `output_fields` restricts the returned payload to just the text
-              field. Additional fields (e.g. metadata) should be added here if
-              they are indexed and required by consumers.
         """
         return self.client.search(
             collection_name=collection,

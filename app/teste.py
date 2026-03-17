@@ -3,10 +3,10 @@ from langchain_core.tools import tool
 from langchain_ollama import ChatOllama
 from langgraph.prebuilt import create_react_agent
 
-from app.core.entities.collection import collection_name
-from app.src.db.milvus_client import milvusClient
-from app.infrastructure.repositories.base_repo import BaseRepo
-from app.core.services.embbeding_service import EmbbedingService
+from app.infrastructure.clients.milvus_client import milvusClient
+from app.infrastructure.repositories.milvus_repo import BaseRepo
+from app.infrastructure.implementations.embbeding.MiniLML12_embbeding import EmbbedingService
+from app.infrastructure.configs import settings
 
 # --- Dependencies ---
 
@@ -19,7 +19,7 @@ service = EmbbedingService()
 def search(text: str) -> str:
     """Search the document database for the given text query."""
     vector = service.embbed_it([text])
-    return str(repo.search(collection_name, vector))
+    return str(repo.search(settings.collection_name, vector))
 
 # --- LLM ---
 
