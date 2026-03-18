@@ -8,5 +8,6 @@ class Settings(BaseSettings):
     chunk_size:int = getenv("CHUNK_SIZE", 500)
     chunk_overlap:int = getenv("CHUNK_OVERLAP", 20)
     think: bool = getenv("ENABLE_THINK", True)
+    OLLAMA_URL: str = getenv("OLLAMA_URL", "http://localhost:11435")
     
 settings = Settings()

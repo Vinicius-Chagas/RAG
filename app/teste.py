@@ -1,6 +1,7 @@
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.tools import tool
 from langchain_ollama import ChatOllama
+from langchain.agents import create_agent
 from langgraph.prebuilt import create_react_agent
 
 from app.infrastructure.clients.milvus_client import milvusClient
@@ -31,7 +32,7 @@ llm = ChatOllama(
 
 # --- Agent ---
 
-agent = create_react_agent(llm, tools=[search])
+agent = create_agent(llm, tools=[search])
 
 # --- Run ---
 

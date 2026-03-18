@@ -1,32 +1,21 @@
-from fastapi import FastAPI, UploadFile
-from app.core.services.bucket_service import BucketService
-from app.infrastructure.db.bucket_structure import BucketStructure
-from app.core.entities.file import File
-from io import BytesIO
+from fastapi import FastAPI
+from app.infrastructure.implementations.schema_builders.bucket_schema import BucketSchemaBuilder
+from app.api.routes import chat, files
+# from app.core.workers.bronze_to_silver import start_worker as start_bronze_to_silver
+# from app.core.workers.silver_to_gold import start_worker as start_silver_to_gold
+
 
 app = FastAPI()
-bucketService = BucketService()
-bucketStructure = BucketStructure()
+bucketStructure = BucketSchemaBuilder()
 
 bucketStructure.build()
+# start_bronze_to_silver()
+# start_silver_to_gold()
+
+app.include_router(chat.router)
+app.include_router(files.router)
 
 @app.get("/health")
 def health():
     return { "ok": "ok" }
 
-@app.post("/upload-file")
-async def upload_file(file: UploadFile):
-    file_obj = File(BytesIO(file.file.read()),file.filename, file.content_type)
-    file.file.close()
-    file_name = bucketService.add_object("bronze", file_obj)
-    return { "status": "file created with success", "file_name" : file_name }
-
-@app.delete("/remove-file")
-async def remove_file(file_name: str):
-    bucketService.remove_object("bronze", file_name)
-    return { "status": "file removed with success" }
-
-@app.put("/update-file")
-async def update_file(file_name: str, file: UploadFile):
-    bucketService.update_object("bronze", file_name, file.file, file.size)
-    return { "status": "file updated with success" }

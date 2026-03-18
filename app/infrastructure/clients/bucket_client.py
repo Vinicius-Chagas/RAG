@@ -1,5 +1,5 @@
 from minio import Minio
-from core.configs import settings
+from app.infrastructure.configs import settings
 
 client = Minio(
     settings.MINIO_URL,

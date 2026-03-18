@@ -1,4 +1,4 @@
 from pymilvus import MilvusClient
-from core.configs import settings
+from app.infrastructure.configs import settings
 
 milvusClient = MilvusClient(settings.MILVUS_URL)
