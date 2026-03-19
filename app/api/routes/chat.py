@@ -4,6 +4,7 @@ from app.core.services.search_service import SearchService
 from app.infrastructure.implementations.embbeding.MiniLML12_embbeding import MiniLML12_Embbeding
 from app.infrastructure.repositories.milvus_repo import MilvusRepo
 from app.infrastructure.clients import ollama, milvus_client
+from langchain_core.tools import tool
 from fastapi import Cookie, Response
 from typing import Annotated
 import uuid
@@ -19,7 +20,10 @@ repo = MilvusRepo(milvus_client.milvusClient)
 
 searchService = SearchService(repo, embbeder)
 
-chatService = ChatService(ollama.client, [searchService.search])
+# Wrap the search method as a tool
+search_tool = tool(searchService.search)
+
+chatService = ChatService(ollama.client, [search_tool])
 
 @router.post("/message")
 def send_message(response: Response, message: str, session_id: Annotated[str | None, Cookie()] = None):

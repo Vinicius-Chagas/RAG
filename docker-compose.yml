@@ -7,6 +7,8 @@ services:
       - "3333:3333"
     environment:
       MINIO_URL: minio:9000
+      MILVUS_URL: http://milvus-standalone:19530
+      OLLAMA_URL: http://ollama:11434
     depends_on:
       minio: 
         condition: service_healthy
@@ -16,6 +18,8 @@ services:
       timeout: 3s
       retries: 5
       start_period: 10s
+    networks:
+      - rag-network
 
 
   minio:
@@ -36,6 +40,8 @@ services:
       start_period: 10s
     volumes:
       - minio-data:/data
+    networks:
+      - rag-network
 
   etcd:
     container_name: milvus-etcd
@@ -48,6 +54,8 @@ services:
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/etcd:/etcd
     command: etcd -advertise-client-urls=http://etcd:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    networks:
+      - rag-network
     healthcheck:
       test: ["CMD", "etcdctl", "endpoint", "health"]
       interval: 30s
@@ -72,6 +80,8 @@ services:
       start_period: 90s
       timeout: 20s
       retries: 3
+    networks:
+      - rag-network
     ports:
       - "19530:19530"
       - "9091:9091"
@@ -86,6 +96,8 @@ services:
       - "3005:3000"
     environment:
       MILVUS_URL: standalone:19530
+    networks:
+      - rag-network
     depends_on:
       standalone:
         condition: service_healthy

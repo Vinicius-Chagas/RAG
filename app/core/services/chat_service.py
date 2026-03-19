@@ -39,6 +39,8 @@ class ChatService:
         chat = self._get_or_create_chat(session_id)
         chat.append(HumanMessage(message))
 
+        print("Total messages of chat: ", len(chat))
+
         result = self.agent.invoke({"messages": chat})
 
         self._find_tool_call(result)
