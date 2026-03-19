@@ -1,7 +1,8 @@
 from sentence_transformers import SentenceTransformer
+from app.core.interfaces.embbeding import EmbeddingStrategy
 import json
 
-class MiniLML12_Embbeding():
+class MiniLML12_Embbeding(EmbeddingStrategy):
 
     def __init__(self):
         self._model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2', device="cpu")

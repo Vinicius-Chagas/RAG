@@ -1,4 +1,4 @@
-from app.core.entities.documents import MilvulsSchema
+from app.core.entities.documents import MilvusSchema
 from typing import TypedDict
 from abc import ABC, abstractmethod
 
@@ -18,7 +18,7 @@ class VectorRepository(ABC):
         pass
 
     @abstractmethod
-    def insert(self, collection: str, data: list[MilvulsSchema]):
+    def insert(self, collection: str, data: list[MilvusSchema]):
         pass
 
     @abstractmethod

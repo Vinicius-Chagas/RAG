@@ -2,10 +2,8 @@ FROM python:3.14-slim
 
 WORKDIR /app
 
-COPY ./requirements.txt /app/requirements.txt
+COPY . /app
 
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-COPY . /app
-
-CMD ["fastapi", "run", "src/main.py", "--port", "3333"]
+CMD ["fastapi", "run", "app/main.py", "--port", "3333"]

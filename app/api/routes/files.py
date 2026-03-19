@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends
 from app.core.entities.file import File
 from io import BytesIO
 from fastapi import UploadFile
-from core.services.bucket_service import BucketService
+from app.core.services.bucket_service import BucketService
+from app.infrastructure.clients.bucket_client import client
 
 
 router = APIRouter(
@@ -11,7 +12,7 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-bucketService = BucketService()
+bucketService = BucketService(client)
 
 @router.post("/upload-file")
 async def upload_file(file: UploadFile):

@@ -1,13 +1,12 @@
 from fastapi import APIRouter, Depends
-from app.core.entities.file import File
-from io import BytesIO
-from fastapi import UploadFile
 from app.core.services.chat_service import ChatService
+from app.core.services.search_service import SearchService
+from app.infrastructure.implementations.embbeding.MiniLML12_embbeding import MiniLML12_Embbeding
+from app.infrastructure.repositories.milvus_repo import MilvusRepo
+from app.infrastructure.clients import ollama, milvus_client
 from fastapi import Cookie, Response
 from typing import Annotated
 import uuid
-
-
 
 router = APIRouter(
     prefix="/chat",
@@ -15,7 +14,12 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-chatService = ChatService()
+embbeder = MiniLML12_Embbeding()
+repo = MilvusRepo(milvus_client.milvusClient)
+
+searchService = SearchService(repo, embbeder)
+
+chatService = ChatService(ollama.client, [searchService.search])
 
 @router.post("/message")
 def send_message(response: Response, message: str, session_id: Annotated[str | None, Cookie()] = None):
