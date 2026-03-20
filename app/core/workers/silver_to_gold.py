@@ -1,48 +1,42 @@
 from app.core.services.bucket_service import BucketService
 from app.core.interfaces.chunking import ChunkingStrategy
 from app.core.interfaces.embbeding import EmbeddingStrategy
-from app.infrastructure.repositories.milvus_repo import BaseRepo
+from app.infrastructure.repositories.milvus_repo import MilvusRepo
 from app.infrastructure.configs import settings
-from app.core.entities.documents import MilvusSchema
-from minio.datatypes import Object
-from typing import Iterator, cast
 import numpy as np
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 class SilverToGoldWorker:
 
-    def __init__(self, bucket: BucketService, chunk: ChunkingStrategy, embbeding: EmbeddingStrategy, repo: BaseRepo):
+    def __init__(self, bucket: BucketService, chunk: ChunkingStrategy, embbeding: EmbeddingStrategy, repo: MilvusRepo):
             self._bucketService = bucket
             self._chunkingService = chunk
             self._embbedingService = embbeding
             self._repo = repo
 
-    def exec(self):
-
-        files = cast(Iterator[Object], self._bucketService.list_objects("silver", None))
+    async def run(self):
+        files = await self._bucketService.list_objects("silver", None)
 
         for file_meta in files:
+            print(f"Processing {file_meta.object_name}...")
+            file_stream = await self._bucketService.get_object(file_meta.object_name, "silver")
 
-            file = self._bucketService.get_object(file_meta.object_name, "silver")
-
-            content = file.read().decode('utf-8')
-            lines = content.splitlines(keepends=True)
-
-            chunks = self._chunkingService.chunk_it("/n".join(lines))
+            content = file_stream.read().decode('utf-8')
+            
+            chunks = self._chunkingService.chunk_it(content)
             embbeds = self._embbedingService.embbed_it(chunks)
 
             items = self.__to_schema(chunks, embbeds)
 
             self._repo.insert(settings.collection_name, items)
+            print(f"Inserted {len(items)} chunks from {file_meta.object_name} into Milvus.")
 
+    def __to_schema(self, chunks: list[str], embbeds: np.ndarray) -> list[dict]:
+            return [dict(text=text, text_vector=embbeds[ind].tolist()) for ind, text in enumerate(chunks)]
 
-    def __to_schema(self, chunks: list[str], embbeds: np.ndarray[np._AnyShapeT, np.dtype[any]]) -> list[MilvusSchema]:
-            return cast(list[MilvusSchema],[dict(text=text, text_vector=embbeds[ind]) for ind, text in enumerate(chunks)])
-
-def start_worker(bucket: BucketService, chunk: ChunkingStrategy, embbeding: EmbeddingStrategy, repo: BaseRepo):
+def start_worker(bucket: BucketService, chunk: ChunkingStrategy, embbeding: EmbeddingStrategy, repo: MilvusRepo):
     worker = SilverToGoldWorker(bucket, chunk, embbeding, repo)
     scheduler = AsyncIOScheduler()
     scheduler.add_job(worker.run, "interval", minutes=5)
     scheduler.start()
-

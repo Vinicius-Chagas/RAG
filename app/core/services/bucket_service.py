@@ -47,11 +47,8 @@ class BucketService:
         return await asyncio.to_thread(self._client.remove_object, bucket_name=bucket, object_name=obj_name)
 
     async def save_as_txt(self, text: list[str], name: str, target_bucket: str):  
-        def _write():
-            file = File(BytesIO("\n".join(text).encode("utf-8")), name+".txt", "text")
-            self.add_object(target_bucket, file)   
-
-        return await asyncio.to_thread(_write)
+        file = File(BytesIO("\n".join(text).encode("utf-8")), name+".txt", "text")
+        return await self.add_object(target_bucket, file)
     
     def _gen_name(self, file_name:str):
         root, extension = os.path.splitext(file_name)
