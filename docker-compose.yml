@@ -1,7 +1,9 @@
 services:
 
   api:
-    build: ./app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
     container_name: RAG
     ports:
       - "3333:3333"

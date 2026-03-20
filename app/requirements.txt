@@ -5,7 +5,4 @@ sentence-transformers
 pypdf
 langchain-text-splitters
 langchain_ollama
-langgraph
-langchain
-ollama
 mlflow

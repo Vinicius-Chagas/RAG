@@ -3,8 +3,16 @@ set -e
 
 apt-get update && apt-get install -y curl
 
-curl -L -o /root/.ollama/Qwen3.5-4B-UD-Q4_K_XL.gguf \
-  "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-UD-Q4_K_XL.gguf"
+GGUF_PATH="/root/.ollama/Qwen3.5-4B-UD-Q4_K_XL.gguf"
+
+if [ ! -f "$GGUF_PATH" ]; then
+  echo "Downloading model..."
+  mkdir -p /root/.ollama
+  curl -L -o "$GGUF_PATH" \
+    "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-UD-Q4_K_XL.gguf"
+else
+  echo "Model already exists, skipping download."
+fi
 
 cat > /Modelfile << 'EOF'
 FROM /root/.ollama/Qwen3.5-4B-UD-Q4_K_XL.gguf
@@ -69,6 +77,11 @@ ollama serve &
 OLLAMA_PID=$!
 sleep 10
 
-ollama create qwen3.5-unsloth -f /Modelfile
+if ! ollama list | grep -q "qwen3.5-unsloth"; then
+  echo "Creating model..."
+  ollama create qwen3.5-unsloth -f /Modelfile
+else
+  echo "Model already registered, skipping create."
+fi
 
 wait $OLLAMA_PID
